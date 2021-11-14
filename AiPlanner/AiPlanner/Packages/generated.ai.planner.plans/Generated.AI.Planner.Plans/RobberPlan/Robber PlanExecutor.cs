@@ -39,8 +39,8 @@ namespace Generated.AI.Planner.Plans.RobberPlan
         static Dictionary<Guid, string> s_ActionGuidToNameLookup = new Dictionary<Guid,string>()
         {
             { ActionScheduler.WanderGuid, nameof(Wander) },
-            { ActionScheduler.StealGuid, nameof(Steal) },
             { ActionScheduler.ApproachGuid, nameof(Approach) },
+            { ActionScheduler.StealGuid, nameof(Steal) },
         };
 
         PlannerStateConverter<TraitBasedObject, StateEntityKey, StateData, StateDataContext, StateManager> m_StateConverter;
@@ -67,11 +67,11 @@ namespace Generated.AI.Planner.Plans.RobberPlan
                 case var actionGuid when actionGuid == ActionScheduler.WanderGuid:
                     actionName = nameof(Wander);
                     break;
-                case var actionGuid when actionGuid == ActionScheduler.StealGuid:
-                    actionName = nameof(Steal);
-                    break;
                 case var actionGuid when actionGuid == ActionScheduler.ApproachGuid:
                     actionName = nameof(Approach);
+                    break;
+                case var actionGuid when actionGuid == ActionScheduler.StealGuid:
+                    actionName = nameof(Steal);
                     break;
             }
 
@@ -97,11 +97,11 @@ namespace Generated.AI.Planner.Plans.RobberPlan
                     case nameof(Wander):
                         parameterIndex = Wander.GetIndexForParameterName(traitBasedObjectName);
                         break;
-                    case nameof(Steal):
-                        parameterIndex = Steal.GetIndexForParameterName(traitBasedObjectName);
-                        break;
                     case nameof(Approach):
                         parameterIndex = Approach.GetIndexForParameterName(traitBasedObjectName);
+                        break;
+                    case nameof(Steal):
+                        parameterIndex = Steal.GetIndexForParameterName(traitBasedObjectName);
                         break;
                 }
 
@@ -178,11 +178,11 @@ namespace Generated.AI.Planner.Plans.RobberPlan
                  case var actionGuid when actionGuid == ActionScheduler.WanderGuid:
                     parameterNames = Wander.parameterNames;
                         break;
-                 case var actionGuid when actionGuid == ActionScheduler.StealGuid:
-                    parameterNames = Steal.parameterNames;
-                        break;
                  case var actionGuid when actionGuid == ActionScheduler.ApproachGuid:
                     parameterNames = Approach.parameterNames;
+                        break;
+                 case var actionGuid when actionGuid == ActionScheduler.StealGuid:
+                    parameterNames = Steal.parameterNames;
                         break;
             }
 

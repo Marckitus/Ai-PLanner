@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ActionDefinitions:
   - {fileID: 11400000, guid: b7be205191855e445a34b83492484fed, type: 2}
-  - {fileID: 11400000, guid: 5dff2d755fcecee4ebe40997d79b7623, type: 2}
   - {fileID: 11400000, guid: 0ad4233fbe8a0a54badd3be9f0947969, type: 2}
+  - {fileID: 11400000, guid: 5dff2d755fcecee4ebe40997d79b7623, type: 2}
   m_StateTerminationDefinitions:
   - {fileID: 11400000, guid: ff9d456d84f3cf04bbb91d113a35447b, type: 2}
   m_CustomCumulativeRewardEstimator: 

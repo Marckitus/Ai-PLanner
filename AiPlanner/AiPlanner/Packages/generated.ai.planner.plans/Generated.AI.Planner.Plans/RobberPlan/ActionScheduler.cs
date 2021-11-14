@@ -14,8 +14,8 @@ namespace Generated.AI.Planner.Plans.RobberPlan
         ITraitBasedActionScheduler<TraitBasedObject, StateEntityKey, StateData, StateDataContext, StateManager, ActionKey>
     {
         public static readonly Guid WanderGuid = Guid.NewGuid();
-        public static readonly Guid StealGuid = Guid.NewGuid();
         public static readonly Guid ApproachGuid = Guid.NewGuid();
+        public static readonly Guid StealGuid = Guid.NewGuid();
 
         // Input
         public NativeList<StateEntityKey> UnexpandedStates { get; set; }
@@ -37,8 +37,8 @@ namespace Generated.AI.Planner.Plans.RobberPlan
             public NativeList<StateEntityKey> UnexpandedStates;
             public NativeQueue<StateTransitionInfoPair<StateEntityKey, ActionKey, StateTransitionInfo>> CreatedStateInfo;
             public EntityCommandBuffer WanderECB;
-            public EntityCommandBuffer StealECB;
             public EntityCommandBuffer ApproachECB;
+            public EntityCommandBuffer StealECB;
 
             public void Execute()
             {
@@ -55,16 +55,6 @@ namespace Generated.AI.Planner.Plans.RobberPlan
                     entityManager.RemoveComponent(stateEntity, typeof(WanderFixupReference));
                 }
 
-                StealECB.Playback(entityManager);
-                for (int i = 0; i < UnexpandedStates.Length; i++)
-                {
-                    var stateEntity = UnexpandedStates[i].Entity;
-                    var StealRefs = entityManager.GetBuffer<StealFixupReference>(stateEntity);
-                    for (int j = 0; j < StealRefs.Length; j++)
-                        CreatedStateInfo.Enqueue(StealRefs[j].TransitionInfo);
-                    entityManager.RemoveComponent(stateEntity, typeof(StealFixupReference));
-                }
-
                 ApproachECB.Playback(entityManager);
                 for (int i = 0; i < UnexpandedStates.Length; i++)
                 {
@@ -73,6 +63,16 @@ namespace Generated.AI.Planner.Plans.RobberPlan
                     for (int j = 0; j < ApproachRefs.Length; j++)
                         CreatedStateInfo.Enqueue(ApproachRefs[j].TransitionInfo);
                     entityManager.RemoveComponent(stateEntity, typeof(ApproachFixupReference));
+                }
+
+                StealECB.Playback(entityManager);
+                for (int i = 0; i < UnexpandedStates.Length; i++)
+                {
+                    var stateEntity = UnexpandedStates[i].Entity;
+                    var StealRefs = entityManager.GetBuffer<StealFixupReference>(stateEntity);
+                    for (int j = 0; j < StealRefs.Length; j++)
+                        CreatedStateInfo.Enqueue(StealRefs[j].TransitionInfo);
+                    entityManager.RemoveComponent(stateEntity, typeof(StealFixupReference));
                 }
             }
         }
@@ -83,18 +83,18 @@ namespace Generated.AI.Planner.Plans.RobberPlan
             var WanderDataContext = StateManager.StateDataContext;
             var WanderECB = StateManager.GetEntityCommandBuffer();
             WanderDataContext.EntityCommandBuffer = WanderECB.AsParallelWriter();
-            var StealDataContext = StateManager.StateDataContext;
-            var StealECB = StateManager.GetEntityCommandBuffer();
-            StealDataContext.EntityCommandBuffer = StealECB.AsParallelWriter();
             var ApproachDataContext = StateManager.StateDataContext;
             var ApproachECB = StateManager.GetEntityCommandBuffer();
             ApproachDataContext.EntityCommandBuffer = ApproachECB.AsParallelWriter();
+            var StealDataContext = StateManager.StateDataContext;
+            var StealECB = StateManager.GetEntityCommandBuffer();
+            StealDataContext.EntityCommandBuffer = StealECB.AsParallelWriter();
 
             var allActionJobs = new NativeArray<JobHandle>(4, Allocator.TempJob)
             {
                 [0] = new Wander(WanderGuid, UnexpandedStates, WanderDataContext).Schedule(UnexpandedStates, 0, inputDeps),
-                [1] = new Steal(StealGuid, UnexpandedStates, StealDataContext).Schedule(UnexpandedStates, 0, inputDeps),
-                [2] = new Approach(ApproachGuid, UnexpandedStates, ApproachDataContext).Schedule(UnexpandedStates, 0, inputDeps),
+                [1] = new Approach(ApproachGuid, UnexpandedStates, ApproachDataContext).Schedule(UnexpandedStates, 0, inputDeps),
+                [2] = new Steal(StealGuid, UnexpandedStates, StealDataContext).Schedule(UnexpandedStates, 0, inputDeps),
                 [3] = entityManager.ExclusiveEntityTransactionDependency
             };
 
@@ -108,8 +108,8 @@ namespace Generated.AI.Planner.Plans.RobberPlan
                 UnexpandedStates = UnexpandedStates,
                 CreatedStateInfo = m_CreatedStateInfo,
                 WanderECB = WanderECB,
-                StealECB = StealECB,
                 ApproachECB = ApproachECB,
+                StealECB = StealECB,
             };
 
             var playbackJobHandle = playbackJob.Schedule(allActionJobsHandle);
