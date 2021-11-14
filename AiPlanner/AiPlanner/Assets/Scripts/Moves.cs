@@ -13,6 +13,7 @@ public class Moves : MonoBehaviour
     public Collider floor;
     GameObject[] hidingSpots;
     NavMeshAgent agent;
+    public Animator anim;
 
     void Start()
     {
